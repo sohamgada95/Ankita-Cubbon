@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cubbon Quest · Mobile</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Chillax';src:local('Chillax'),local('Chillax-Regular');font-weight:200 700}
+:root{--f:'Chillax','Outfit',system-ui,sans-serif;--u:min(calc(100vw/402),calc(100dvh/874));--green:#2b9a56;--green2:#34c06a;--pink:#ec89b4;--blush:#fad2e4;--ease:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html,body{height:100%;-webkit-text-size-adjust:100%;overflow:hidden;font-family:var(--f),sans-serif;color:#000;background:#111}
+#ph{position:fixed;left:50%;top:50%;width:calc(402*var(--u));height:calc(874*var(--u));transform:translate(-50%,-50%);overflow:hidden;background:#fff}
+@media (min-aspect-ratio:3/4){#ph{border-radius:calc(44*var(--u))}}
+@media (max-width:500px){:root{--u:min(calc(100vw/402),calc(100dvh/800))}#ph{left:0;top:0;width:100vw;height:100vh;height:100dvh;transform:none;border-radius:0}}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(24*var(--u));text-align:center;padding:calc(100*var(--u)) calc(36*var(--u)) calc(48*var(--u));
+opacity:0;visibility:hidden;overflow:hidden;transition:opacity .55s var(--ease),visibility 0s .55s}
+.screen.on{opacity:1;visibility:visible;transition:opacity .55s var(--ease),visibility 0s}
+.pk{background:var(--pink)}.bl{background:var(--blush)}.gr{background:var(--green)}
+.r{opacity:0;transform:translateY(calc(20*var(--u)));transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.on .r{opacity:1;transform:none}.on .r:nth-child(3){transition-delay:.08s}.on .r:nth-child(4){transition-delay:.16s}.on .r:nth-child(5){transition-delay:.24s}.on .r:nth-child(6){transition-delay:.32s}
+h1{font-weight:700;line-height:1.05;font-size:calc(30*var(--u));-webkit-text-stroke:.025em currentColor}
+p.s{font:400 calc(15*var(--u))/1.55 var(--f);max-width:calc(320*var(--u))}
+.back{position:absolute;z-index:20;left:calc(28*var(--u));top:calc(calc(30*var(--u)) + env(safe-area-inset-top,0px));height:calc(40*var(--u));padding:0 calc(18*var(--u));border:2.5px solid #000;border-radius:calc(30*var(--u));background:#fff;font:600 calc(15*var(--u)) var(--f);cursor:pointer;color:#000}
+.back:active{transform:scale(.94)}
+.chips{position:absolute;top:calc(calc(28*var(--u)) + env(safe-area-inset-top,0px));display:flex;gap:calc(8*var(--u))}
+.chip{height:calc(32*var(--u));padding:0 calc(14*var(--u));border:2.5px solid #000;border-radius:calc(20*var(--u));background:#fff;font:600 calc(13*var(--u)) var(--f);display:grid;place-items:center}.chip.act{background:#000;color:#fff}
+.pill{position:relative;flex:none;height:calc(60*var(--u));width:calc(260*var(--u));white-space:nowrap;border:3px solid #000;border-radius:calc(40*var(--u));background:#000;color:#fff;cursor:pointer;display:flex;align-items:center;padding:0 calc(80*var(--u)) 0 calc(26*var(--u));font:500 calc(17*var(--u)) var(--f);overflow:hidden;transition:background .3s,transform .25s var(--ease)}
+.pill .knob{position:absolute;right:2.5px;top:2.5px;bottom:2.5px;width:calc(50*var(--u));border-radius:50%;background:var(--green2);display:grid;place-items:center;transition:width .45s var(--ease)}
+.pill svg{width:calc(18*var(--u));height:calc(18*var(--u));stroke:#000;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill:active{transform:scale(.96)}.pill:active .knob{width:calc(100% - 5px);border-radius:40px}
+.pill.off{background:#bdbdbd;color:#000;pointer-events:none}
+.tm{position:absolute;z-index:20;right:calc(28*var(--u));top:calc(calc(30*var(--u)) + env(safe-area-inset-top,0px));height:calc(40*var(--u));padding:0 calc(16*var(--u));border:2.5px solid #000;border-radius:calc(30*var(--u));background:#fff;font:600 calc(15*var(--u)) var(--f);display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.tm.late{background:var(--pink)}
+.vf{position:relative;width:calc(250*var(--u));height:calc(250*var(--u));border:3px solid #000;border-radius:calc(34*var(--u));background:#fff;display:grid;place-items:center;overflow:hidden}
+.vf svg.qr{width:62%;opacity:.9}
+.line{position:absolute;left:8%;right:8%;height:calc(4*var(--u));background:var(--green2);border-radius:calc(4*var(--u));top:10%;box-shadow:0 0 calc(18*var(--u)) var(--green2);animation:sc 1.6s ease-in-out infinite alternate}
+@keyframes sc{to{top:86%}}
+.vf.ok{background:var(--green2);transition:background .4s}.vf.ok .qr,.vf.ok .line{display:none}
+.tick{display:none;width:calc(90*var(--u))}.vf.ok .tick{display:block;animation:pop .6s var(--ease)}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.bar{width:calc(300*var(--u));height:calc(12*var(--u));border-radius:calc(8*var(--u));background:#fff;border:2px solid #000;overflow:hidden}.bar i{display:block;height:100%;width:0;background:#000;transition:width .3s linear}
+.up{position:relative;width:min(calc(300*var(--u)),100%);aspect-ratio:1;border:3px dashed #000;border-radius:calc(34*var(--u));background:#fff;overflow:hidden;cursor:pointer;display:grid;place-items:center;transition:transform .3s var(--ease)}
+.up:active{transform:scale(.97)}.up img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}.up.has{border-style:solid}.up.has img{display:block}.up.has .plus{display:none}
+.plus{width:calc(64*var(--u));height:calc(64*var(--u));border-radius:50%;background:var(--green2);border:3px solid #000;display:grid;place-items:center;font:500 calc(34*var(--u))/1 var(--f)}
+.up input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.cq{font:700 calc(44*var(--u)) var(--f);-webkit-text-stroke:.03em #fff;color:#fff;line-height:1}
+.num{font:700 calc(120*var(--u))/1 var(--f);color:#fff}
+.cf{position:absolute;top:calc(-20*var(--u));width:calc(10*var(--u));height:calc(10*var(--u));border-radius:50%;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110dvh) rotate(540deg)}}
+.stack{position:relative;width:calc(292*var(--u));height:calc(470*var(--u));margin:calc(10*var(--u)) 0}
+.stack>div{position:absolute;inset:0;border-radius:calc(26*var(--u));transition:transform 1.1s var(--ease),opacity .6s}
+.k1{background:#fff;transform:translateY(calc(40*var(--u))) rotate(0)}.k2{background:var(--blush);transform:translateY(calc(20*var(--u))) rotate(0)}
+.on .k1{transform:rotate(7deg) translate(calc(14*var(--u)),calc(6*var(--u)))}.on .k2{transform:rotate(-5deg) translate(calc(-12*var(--u)),calc(2*var(--u)))}
+.k3{background:var(--green);padding:calc(28*var(--u)) calc(26*var(--u));display:flex;flex-direction:column;align-items:center;transform:translateY(calc(60*var(--u))) scale(.92);opacity:0}
+.on .k3{transform:none;opacity:1;transition-delay:.15s}
+.fl{width:calc(180*var(--u));height:calc(180*var(--u));animation:spin 40s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.k3 h2{font:700 calc(28*var(--u)) var(--f);margin-top:calc(16*var(--u));color:#fff;-webkit-text-stroke:.03em #fff}.k3 p{font:400 calc(13*var(--u))/1.55 var(--f);margin-top:calc(12*var(--u))}
+.tag{margin-top:calc(16*var(--u));padding:calc(3*var(--u)) calc(14*var(--u));border:2px solid #000;border-radius:calc(20*var(--u));background:var(--blush);font:700 calc(13*var(--u)) var(--f)}
+.k3 small{font:400 calc(11*var(--u))/1.5 var(--f);margin-top:calc(16*var(--u))}
+.ft{width:calc(292*var(--u));display:flex;justify-content:space-between;align-items:center}
+.ft b{font:600 calc(20*var(--u)) var(--f)}.ft span{font:700 calc(11*var(--u)) var(--f)}
+@media (prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation:none!important}}
+
+.scx{position:relative;width:calc(300*var(--u));height:calc(330*var(--u));border:3px solid #000;border-radius:calc(34*var(--u));background:#fff;overflow:hidden}
+.rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(10*var(--u));padding:calc(24*var(--u))}
+.rv{background:#fff}.eb{font:600 calc(13*var(--u)) var(--f);letter-spacing:.28em;color:#ee2a7b}.sm{font-size:calc(9*var(--u));letter-spacing:.12em;line-height:1.5;font-weight:600}
+.d3{font:700 calc(84*var(--u))/.95 var(--f);color:#ee2a7b;text-shadow:0.01em 0.01em 0 #ff9fd0,0.02em 0.02em 0 #ff9fd0,0.03em 0.03em 0 #ff9fd0,0.04em 0.04em 0 #ff9fd0,0.05em 0.05em 0 #ff9fd0,0.06em 0.06em 0 #ff9fd0,0.07em 0.07em 0 #ff9fd0,0.08em 0.08em 0 #ff9fd0,0.09em 0.09em 0 #ff9fd0,0.10em 0.10em 0 #ff9fd0,0.11em 0.11em 0 #ff9fd0,0.12em 0.12em 0 #ff9fd0;margin:calc(6*var(--u)) 0 calc(10*var(--u)) 0;padding-right:.1em}
+.ol{font:700 calc(15*var(--u)) var(--f);color:#ee2a7b;letter-spacing:.03em;text-shadow:calc(1.5*var(--u)) calc(1.5*var(--u)) 0 #ff9fd0}
+#s-done.on .r:nth-child(2){transition-delay:2s}#s-done.on .r:nth-child(3){transition-delay:2.25s}#s-done.on .r:nth-child(4){transition-delay:2.5s}#s-done.on .r:nth-child(5){transition-delay:2.75s}
+#sc{position:absolute;inset:0;width:100%;height:100%;touch-action:none;transition:opacity .6s}
+.gp{display:none;height:calc(32*var(--u));padding:0 calc(14*var(--u));border:2.5px solid #000;border-radius:calc(20*var(--u));background:#fff;font:600 calc(13*var(--u)) var(--f);align-items:center}.gp.show{display:inline-flex}
+.steps{width:100%;background:#fff;border:3px solid #000;border-radius:calc(30*var(--u));padding:calc(24*var(--u));display:flex;flex-direction:column;gap:calc(18*var(--u));text-align:left}
+.st{display:flex;gap:calc(14*var(--u));align-items:flex-start;font:400 calc(14*var(--u))/1.5 var(--f)}.st i{flex:none;width:calc(28*var(--u));height:calc(28*var(--u));border-radius:50%;background:#000;color:#fff;font:600 calc(14*var(--u))/calc(28*var(--u)) var(--f);text-align:center;font-style:normal}
+.code{display:flex;justify-content:space-between;align-items:center;border:2.5px dashed #000;border-radius:calc(20*var(--u));padding:calc(10*var(--u)) calc(14*var(--u));font:600 calc(17*var(--u)) var(--f);background:var(--blush);cursor:pointer}.code span{font:500 calc(12*var(--u)) var(--f)}
+</style></head><body><div id="ph">
+<section class="screen bl on" id="s-up"><div class="tm" id="tm">0:00</div>
+ <h1 class="r">Show us your tree</h1><p class="s r">Upload a pic of you with the plant. Submit in <b>under 1 min</b>!</p>
+ <div class="bar r"><i id="bar"></i></div>
+ <label class="up r" id="up"><span class="plus">+</span><img id="prev" alt=""><input type="file" id="file" accept="image/*"></label>
+ <button class="pill off r" id="sub">Submit<span class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+</section>
+
+<section class="screen gr" id="s-done"><div id="cfw"></div>
+ <div class="chip r" style="position:static">Task complete</div>
+ <h1 class="cq r">Congratulations!</h1><p class="s r" style="color:#fff;font-size:calc(18*var(--u));font-weight:600"><b>You found your hidden tree.</b></p>
+ <button class="pill r" data-go="card" style="margin-top:calc(14*var(--u))">See your result<span class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+</section>
+
+<section class="screen pk" id="s-card" style="gap:calc(14*var(--u));padding-top:calc(72*var(--u))">
+ <h1 style="font-size:calc(24*var(--u))">My Cubbon Quest</h1>
+ <div class="stack"><div class="k1"></div><div class="k2"></div>
+  <div class="k3"><svg class="fl" viewBox="-100 -100 200 200"><defs><radialGradient id="g" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ec89b4"/><stop offset="1" stop-color="#fff0f7"/></radialGradient></defs>
+  <g fill="url(#g)"><g id="pt"><path d="M0 0C-30-26-34-80 0-94 34-80 30-26 0 0z"/></g>
+  <use href="#pt" transform="rotate(45)"/><use href="#pt" transform="rotate(90)"/><use href="#pt" transform="rotate(135)"/><use href="#pt" transform="rotate(180)"/><use href="#pt" transform="rotate(225)"/><use href="#pt" transform="rotate(270)"/><use href="#pt" transform="rotate(315)"/></g>
+  <g fill="#ffe94d" opacity=".9"><circle r="12"/></g></svg>
+  <span class="tag" style="margin-top:0;margin-bottom:calc(2*var(--u))">✦ 2ND TREE UNLOCKED ✦</span>
+  <h2 id="t2n">The Banyan</h2>
+  <p id="cmsg"></p>
+  <span class="tag" id="ctag"></span>
+  <small><b>S</b>peed · <b>C</b>uriosity · <b>N</b>ature</small></div></div>
+ <div class="ft"><b>Cubbon Quest</b><span>CUBBON PARK TREE HUNT</span></div>
+ <button class="pill" data-go="reward">Claim your reward<span class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+</section>
+<section class="screen pk" id="s-reward"><div id="cfw2"></div>
+ <div class="chip r" style="position:static">Reward unlocked</div>
+ <h1 class="r" style="font-size:calc(28*var(--u))">You won a scratch card!</h1>
+ <div class="scx r"><div class="rv"><small class="eb">YOU WON</small><div class="d3">20%<br>OFF</div><span class="ol">UP TO ₹150 ON YOUR BILL</span><small class="eb sm">RESTAURANTS INSIDE CUBBON PARK · LOCAL EVENTS INSIDE CUBBON</small></div><canvas id="sc"></canvas></div>
+ <span class="gp" id="gp">✦ Added to Google Pay Rewards</span>
+ <p class="s r" id="rh">Scratch the card to reveal your reward.</p>
+ <button class="pill off r" id="how" data-go="use">How to use<span class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+</section>
+
+<section class="screen bl" id="s-use"><button class="back" data-go="reward">Back</button>
+ <h1 class="r" style="font-size:calc(28*var(--u))">How to use your reward</h1>
+ <div class="steps r">
+  <div class="st"><i>1</i><div>Open <b>Google Pay</b> and tap <b>Rewards</b>. Your Cubbon Quest scratch card is saved there.</div></div>
+  <div class="st"><i>2</i><div>Visit any partner <b>restaurant inside Cubbon Park</b> or a <b>local event inside Cubbon</b>.</div></div>
+  <div class="st"><i>3</i><div>Show your code at billing, then pay with <b>Google Pay</b>.</div></div>
+  <div class="st"><i>4</i><div><b>20% off, up to ₹150</b>, applies to your bill. Valid for 30 days, one use per person.</div></div>
+ </div>
+ <div class="code r" id="code">CUBBON20 <span id="cp">Tap to copy</span></div>
+ <p class="s r" style="font-size:calc(16*var(--u))"><b>Thank you</b> for exploring Cubbon Park. Enjoy your reward!</p>
+ <button class="pill r" id="help">Need help?<span class="knob"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+ <p class="s" id="hp" style="display:none;font-size:calc(13*var(--u))"><b>Stuck?</b> Ask the Cubbon Quest team at the park, and show your code CUBBON20.</p>
+</section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+/* Name + 2nd tree come from the iPad flow: open this page with #Ankita-banyan (letters, digits, hyphens). Falls back to localStorage, then defaults. */
+const cap=s=>s?s[0].toUpperCase()+s.slice(1):s;
+let [nm,tr,ts]=decodeURIComponent(location.hash.slice(1)).split('-');
+try{if(nm)localStorage.setItem('cq_name',nm);else nm=localStorage.getItem('cq_name');if(tr)localStorage.setItem('cq_tree',tr);else tr=localStorage.getItem('cq_tree')}catch(e){}
+const NAME=cap(nm||'Explorer'),TREE={banyan:'Banyan',gulmohar:'Gulmohar',rain:'Rain Tree'}[(tr||'banyan').toLowerCase()]||'Banyan';
+const T=+ts;if(T>1e9&&T*1000<=Date.now()&&Date.now()-T*1000<864e5)var T0=T*1000;
+let cur='up',t0=(typeof T0!=='undefined'?T0:Date.now()),iv=null,secs=0,timers=[];
+const later=(f,m)=>timers.push(setTimeout(f,m));
+function nav(id){timers.forEach(clearTimeout);timers=[];$('#s-'+cur).classList.remove('on');cur=id;
+ if(id==='up'){clearInterval(iv);t0=Date.now();tick();iv=setInterval(tick,250);$('#file').value='';$('#up').classList.remove('has');$('#sub').classList.add('off');$('#bar').style.width=0}
+ if(id==='done')done(); if(id==='card')card();if(id==='reward')setTimeout(initScratch,200);if(id==='up')$('#cp').textContent='Tap to copy';
+ setTimeout(()=>$('#s-'+id).classList.add('on'),140)}
+function tick(){const s=Math.floor((Date.now()-t0)/1000);$('#tm').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+ $('#bar').style.width=Math.min(100,s/60*100)+'%';$('#tm').classList.toggle('late',s>=60)}
+tick();iv=setInterval(tick,250);
+$('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;$('#prev').src=URL.createObjectURL(f);$('#up').classList.add('has');$('#sub').classList.remove('off')};
+$('#sub').onclick=()=>{clearInterval(iv);secs=Math.max(1,Math.round((Date.now()-t0)/1000));nav('done')};
+function conf(w,n=10,sp=1.4){w.innerHTML='';['#fad2e4','#ec89b4','#fff','#ffe94d','#34c06a'].forEach(col=>{for(let i=0;i<n;i++){const d=document.createElement('i');d.className='cf';
+ d.style.cssText=`left:${Math.random()*100}%;background:${col};animation-duration:${2.2+Math.random()*2.2}s;animation-delay:${.1+Math.random()*sp}s`;w.appendChild(d)}})}
+function done(){conf($('#cfw'),18,.9)}
+const sc=$('#sc'),cx=sc.getContext('2d');let drawing=false,moves=0,revealed=false;
+function initScratch(){revealed=false;moves=0;const w=sc.parentElement.clientWidth,hh=sc.parentElement.clientHeight,d=window.devicePixelRatio||1;sc.width=w*d;sc.height=hh*d;sc.style.opacity=1;sc.style.pointerEvents='auto';
+ cx.globalCompositeOperation='source-over';const g=cx.createLinearGradient(0,0,sc.width,sc.height);g.addColorStop(0,'#34c06a');g.addColorStop(1,'#2b9a56');cx.fillStyle=g;cx.fillRect(0,0,sc.width,sc.height);
+ cx.fillStyle='rgba(255,255,255,.22)';for(let i=0;i<7;i++)for(let j=0;j<7;j++){cx.beginPath();cx.arc((i+.5)*sc.width/7,(j+.5)*sc.height/7,sc.width/40,0,7);cx.fill()}
+ cx.fillStyle='#000';cx.font='700 '+(sc.width/9)+'px Chillax,Outfit,sans-serif';cx.textAlign='center';cx.fillText('SCRATCH HERE',sc.width/2,sc.height/2+sc.width/28);
+ $('#how').classList.add('off');$('#gp').classList.remove('show');$('#rh').textContent='Scratch the card to reveal your reward.';cx.globalCompositeOperation='destination-out'}
+function pos(e){const r=sc.getBoundingClientRect();return[(e.clientX-r.left)/r.width*sc.width,(e.clientY-r.top)/r.height*sc.height]}
+function scratch(e){if(!drawing||revealed)return;const[x,y]=pos(e);cx.beginPath();cx.arc(x,y,sc.width/13,0,7);cx.fill();if(++moves%6===0)check()}
+function check(){const d=cx.getImageData(0,0,sc.width,sc.height).data;let n=0,t=0;for(let i=3;i<d.length;i+=64){t++;if(d[i]<20)n++}if(n/t>.42)reveal()}
+function reveal(){revealed=true;sc.style.opacity=0;sc.style.pointerEvents='none';$('#how').classList.remove('off');$('#gp').classList.add('show');$('#rh').innerHTML='Use it at <b>restaurants inside Cubbon Park</b> or <b>local events inside Cubbon</b>.';conf($('#cfw2'))}
+sc.addEventListener('pointerdown',e=>{drawing=true;sc.setPointerCapture(e.pointerId);scratch(e)});sc.addEventListener('pointermove',scratch);sc.addEventListener('pointerup',()=>drawing=false);
+$('#help').onclick=()=>{const p=$('#hp');p.style.display=p.style.display==='none'?'block':'none'};
+$('#code').onclick=()=>{try{navigator.clipboard.writeText('CUBBON20')}catch(e){}$('#cp').textContent='Copied ✓'};
+function card(){const total=300,ahead=Math.max(8,Math.min(total-5,Math.round(total*Math.exp(-secs/45))));
+ $('#t2n').textContent='The '+TREE;
+ $('#cmsg').innerHTML=`<b>${NAME}</b>, you found your hidden tree in <b>${secs} seconds</b> and you’re ahead of <b>${ahead} explorers</b> today.`;
+ $('#ctag').textContent=`${secs}s · AHEAD OF ${ahead}`}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go]');if(t)nav(t.dataset.go)});
+</script></body></html>
